@@ -1,0 +1,65 @@
+@{
+  ViewData["Title"] = "Activity";
+}
+
+<div class="jumbotron col-md-6 mx-auto" style="border-radius: 0;">
+  <div class="navbar">
+    <h2 class="display-4 d-inline mr-auto">@ViewBag.Activity.Title</h2>  
+
+  
+
+  @{
+    bool print = true;
+    foreach (var rsvp in ViewBag.Activity.RSVPed)
+    {
+      if(rsvp.User.User_Id == ViewBag.user_id)
+        {
+          print = false; 
+        }
+    }
+    if(print)
+    {
+      <a asp-controller="Home" asp-action="RSVP" asp-route-id="@ViewBag.Activity.Activity_Id" class="btn btn-success btn-lg ml-auto">Join</a>;
+    }
+    else if(ViewBag.Activity.Coordinator.User_Id == ViewBag.user_id)
+    {
+      <a asp-controller="Home" asp-action="cancelActivity" asp-route-id="@ViewBag.Activity.Activity_Id" class="btn btn-danger btn-lg ml-auto">Cancel</a>;
+    }
+    else
+    {
+      <a asp-controller="Home" asp-action="leaveActivity" asp-route-id="@ViewBag.Activity.Activity_Id" class="btn btn-warning btn-lg ml-auto nav-link">Leave</a>;
+    }
+  }
+
+  </div>
+
+  <div class="form-group">
+    <label>Event Coordinator</label> 
+    <input class="form-control" value="@ViewBag.Activity.Coordinator.FirstName" disabled>
+  </div>
+  <div class="form-group">
+    <label>Description</label> 
+    <textarea class="form-control" rows="6" disabled>@ViewBag.Activity.Description</textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Participants</label> 
+    <select class="custom-select" multiple disabled>
+    @foreach (var person in ViewBag.Activity.RSVPed)
+    {
+      if(person.User.User_Id != ViewBag.user_id)
+      {
+        <option>@person.User.FirstName</option>
+      }
+
+    }
+    </select>
+  </div>
+
+  
+  
+
+
+  
+  
+</div>

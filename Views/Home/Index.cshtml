@@ -1,0 +1,101 @@
+﻿@{
+  ViewData["Title"] = "Home";
+}
+
+<style>
+
+.scrollbar
+{
+	height: 500px;
+	width: 65px;
+	background: #F5F5F5;
+	overflow-y: scroll;
+	margin-bottom: 25px;
+}
+
+#wrapper
+{
+	text-align: center;
+	width: 500px;
+	margin: auto;
+}
+
+#style-5::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+#style-5::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #F5F5F5;
+}
+
+#style-5::-webkit-scrollbar-thumb
+{
+	background-color: #343a40;
+	
+	background-image: -webkit-gradient(linear, 0 0, 0 100%,
+	                   color-stop(.5, rgba(255, 255, 255, .2)),
+					   color-stop(.5, transparent), to(transparent));
+}
+</style>
+
+
+<div class="col-md-6 mx-auto">
+    <h4 class="text-dark">Activities</h4>
+    <div class="jumbotron p-2 shadow scrollbar w-100" id="style-5">
+      <div class="overflow-auto">
+        @{
+          foreach(ActivityModel activity in ViewBag.AllActivities)
+          {
+            <div class="card w-100 px-2 pt-2 pb-1 mb-2 shadow-sm">
+              <div class="row mx-0 mb-1 pb-1 border-bottom">
+                
+                <small class="mr-auto"> Hosted By: @activity.Coordinator.FirstName @activity.Coordinator.LastName</small>
+
+                <small class="ml-auto">@activity.RSVPed.Count Going <i class="fas fa-user-check"></i></small>
+                
+              </div>
+              <p class="font-weight-bold ml-2 my-2">@activity.Title</p>
+              <small class="text-primary">Start: @activity.StartDateTime</small>
+              <small class="text-primary">End: @activity.EndDateTime</small>
+              <small class="">Duration: @activity.Duration1 @activity.DurationMeasure</small>
+
+              <small class="text-muted mt-2">Created: @activity.TimeDiffCreate() | Updated: @activity.TimeDiffUpdate()</small>
+              <div class="row mx-0 mt-1 pt-1 border-top">
+                <div class="mr-auto">
+                  
+                @{
+                  bool print = true;
+                  foreach (var rsvp in activity.RSVPed)
+                  {
+                    if(rsvp.User.User_Id == ViewBag.UserId)
+                    {
+                      print = false; 
+                    }
+                  }
+                  if(print)
+                  {
+                    <a asp-action="RSVP" asp-route-id="@activity.Activity_Id" class="btn btn-outline-success btn-sm ml-auto" style="font-size: 0.75rem; line-height: 1;">Join</a>
+                  }
+                  else if(activity.Coordinator.User_Id == ViewBag.UserId)
+                  {
+                    <a asp-action="cancelActivity" asp-route-id="@activity.Activity_Id" class="btn btn-outline-danger btn-sm ml-auto" style="font-size: 0.75rem; line-height: 1;">Cancel</a>
+                  }
+                  else
+                  {
+                    <a asp-action="leaveActivity" asp-route-id="@activity.Activity_Id" class="btn btn-outline-warning btn-sm ml-auto" style="font-size: 0.75rem; line-height: 1;">Leave</a>
+                  }
+                  
+                }
+                </div>
+                <a asp-controller="Activity" asp-action="viewActivity" asp-route-id="@activity.Activity_Id" class="btn btn-outline-primary btn-sm ml-auto" style="font-size: 0.75rem; line-height: 1;">Learn More ...</a>
+              </div>
+            </div>;
+          }
+        }
+      </div>
+    </div>
+</div>

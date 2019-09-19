@@ -1,0 +1,56 @@
+@{
+  ViewData["Title"] = "Add Activity";
+}
+
+<h2 class="display-4 text-center">Create an Activity!</h2>
+<div class="jumbotron col-md-6 mx-auto" style="border-radius: 0;">
+
+  @model ActivityModel
+  <form asp-action="createActivity" asp-controller="Activity" method="POST">
+
+    <input class="form-control" type="hidden" asp-for="Coordinator_Id" value="@ViewBag.user_id"/>
+    
+    <div class="form-group">
+      <label asp-for="Title"></label>
+      <input class="form-control" type="text" asp-for="Title">
+      <span class="invalid-feedback d-block" asp-validation-for="Title"></span>
+    </div>
+
+    <div class="form-group">
+      <label asp-for="StartDateTime"></label>
+      <div class="form-row">
+        <input class="form-control" type="datetime-local" asp-for="StartDateTime">
+      </div>
+      <span class="invalid-feedback d-block" asp-validation-for="StartDateTime"></span>
+    </div>
+
+    <div class="form-group">
+      <label asp-for="Duration1"></label>
+      <div class="form-row">
+        <input class="form-control col-sm-8" type="text" asp-for="Duration1">
+        <select class="form-control col-sm-4" type="text" asp-for="DurationMeasure">
+          @{
+            List<string> Measure = new List<string>();
+            Measure.Add("Hours");
+            Measure.Add("Minutes");
+            Measure.Add("Days");
+            foreach(string data in Measure as List<string>)
+            {
+              <option>@data</option>
+            }
+          }
+        </select>
+      </div>
+      <span class="invalid-feedback d-block" asp-validation-for="Duration1"></span>
+    </div>
+
+
+    <div class="form-group">
+      <label asp-for="Description"></label>
+      <textarea class="form-control" rows="6" asp-for="Description"></textarea>
+      <span class="invalid-feedback d-block" asp-validation-for="Description"></span>
+    </div>
+
+    <button class="btn btn-success" type="submit">Create Activity</button>
+  </form>
+</div>
